@@ -4,6 +4,8 @@ export function useTimer() {
   const [time, setTime] = useState(0)
   const timerId = useRef(0)
   const [isCounting, setIsCounting] = useState(false)
+  const [previousTime, setPreviousTime] =  useState()
+  const [bestTime, setBestTime] = useState()
 
   useEffect(() => {
     if (isCounting) {
@@ -17,8 +19,14 @@ export function useTimer() {
   }, [isCounting])
 
   const start = () => setIsCounting(true)
-  const stop = () => setIsCounting(false)
-  const reset = () => setTime(0)
+  const stop = () => {
+    setPreviousTime(time)
+    setIsCounting(false)}
+  const reset = () => {
+    setPreviousTime(time)
+    if (!bestTime) setBestTime(time)
+    else if (time < bestTime) setBestTime(time)
+    setTime(0)}
 
-  return {start, stop, reset, time}
+  return {start, stop, reset, time, previousTime, bestTime}
 }
